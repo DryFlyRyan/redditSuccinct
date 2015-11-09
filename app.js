@@ -3,7 +3,7 @@ $(document).ready(function() {
 console.log("doc ready");
 
 // Global Variables
-var longestComment = '';
+// var longestComment = '';
 
 
 // Spare:
@@ -28,18 +28,18 @@ var longestComment = '';
   };
 
   var $getComments = function ($relLink) {
-    forEach('.succinct') {
-      $.get('https://www.reddit.com/' + $relLink + '.json', function (){
+    $('.succinct').each(function () {
+      var relLink = $(this).attr('data');
+      var parent = $(this).closest('.media');
+      var longestComment = '';
+      $.get('https://www.reddit.com/' + relLink + '.json', function (){
         console.log("getting");
       })
       .done(function (data) {
         console.log('done');
         var commentObj = data[1];
         var thread = commentObj.data.children;
-        // var longestComment = 'test';
-
-
-        for (var i = 0; i < 10; i++) {
+        $(thread).each(function() {
           var comment = [];
           if (thread[i].data.body !== undefined) {
             comment = thread[i].data.body;
@@ -49,10 +49,11 @@ var longestComment = '';
 
             }
           }
-        }
-        $(parent).append('<div class="row start-hidden"><p>testing</p</div>');
+        });
+        $(parent).append('<div class="row start-hidden"><p>'+longestComment+'</p</div>');
       });
-    }
+    )};
+  ;
   };
 
   var getRequests = function () {
@@ -100,14 +101,7 @@ var longestComment = '';
     console.log('it\'s clicking');
     var parent = $(this).closest('.media');
     var hiddenP = $(parent).find('.start-hidden');
-    console.log(hiddenP.length);
-    if (hiddenP.length < 1) {
-      console.log('first if');
-      console.log(hiddenP.is(':hidden'));
-      $(parent).append('<div class="row start-hidden"><p>testing</p</div>');
-      $(hiddenP).slideDown('slow');
 
-    }
     if ($(hiddenP).is(':hidden')) {
       console.log('second if');
       $(hiddenP).slideDown('slow');
