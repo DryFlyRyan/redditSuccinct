@@ -20,16 +20,15 @@ console.log("doc ready");
   };
 
   var $getComments = function ($relLink) {
-    var longestComment = 'test';
-    $.get('https://www.reddit.com/' + $relLink + '.json', function (data) {
-      console.log(data);
-      var commentObj = data[1];
-      // console.log("commentObj = ");
-      // console.log(commentObj);
-      var thread = commentObj.data.children;
-      // console.log('thread = ');
-      // console.log(thread);
 
+    $.get('https://www.reddit.com/' + $relLink + '.json', function (){
+      console.log("getting");
+    })
+    .done(function (data) {
+      console.log('done');
+      var commentObj = data[1];
+      var thread = commentObj.data.children;
+      var longestComment = 'test';
 
 
       for (var i = 0; i < 10; i++) {
@@ -38,20 +37,22 @@ console.log("doc ready");
           comment = thread[i].data.body;
           // console.log('comment = ');
           // console.log(comment);
-        }
-        if (comment.length > longestComment.length) {
-          longestComment = comment;
+          if (comment.length > longestComment.length) {
+            longestComment = comment;
+            // console.log('longest comment =');
+            // console.log(longestComment);
+            // console.log('comment = ');
+            // console.log(comment);
+          }
         }
       }
-
-
+      // console.log('longest comment: ');
       // console.log(longestComment);
-      // console.log('longest comment = ');
-      // console.log(longestComment);
-
+      return "TEST PASS";
     });
-    console.log(longestComment);
-    return "TEST PASS";
+    // console.log('longest comment: ');
+    // console.log(longestComment);
+    // return "TEST PASS";
   };
 
   var getRequests = function () {
@@ -75,7 +76,7 @@ console.log("doc ready");
 
           var comment = $getComments($formatLink);
 
-          console.log(comment);
+          console.log('getting comment: ', comment);
 
           if (sublisting.data.thumbnail === 'default') {
             $newElemNoThumb($title, comment );
@@ -98,10 +99,10 @@ console.log("doc ready");
   //     });
 
   $('body').on('click', '.succinct', function () {
-    console.log('succinct push');
+    // console.log('succinct push');
     var panel = $(this).closest('.media').find('.start-hidden');
     if ($(panel).is(':hidden')) {
-      console.log('hidden p');
+      // console.log('hidden p');
       $(panel).slideDown("slow");
     } else {
 
