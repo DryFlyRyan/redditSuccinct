@@ -28,39 +28,31 @@ var longestComment = '';
   };
 
   var $getComments = function ($relLink) {
+    forEach('.succinct') {
+      $.get('https://www.reddit.com/' + $relLink + '.json', function (){
+        console.log("getting");
+      })
+      .done(function (data) {
+        console.log('done');
+        var commentObj = data[1];
+        var thread = commentObj.data.children;
+        // var longestComment = 'test';
 
-    $.get('https://www.reddit.com/' + $relLink + '.json', function (){
-      console.log("getting");
-    })
-    .done(function (data) {
-      console.log('done');
-      var commentObj = data[1];
-      var thread = commentObj.data.children;
-      // var longestComment = 'test';
 
+        for (var i = 0; i < 10; i++) {
+          var comment = [];
+          if (thread[i].data.body !== undefined) {
+            comment = thread[i].data.body;
 
-      for (var i = 0; i < 10; i++) {
-        var comment = [];
-        if (thread[i].data.body !== undefined) {
-          comment = thread[i].data.body;
-          // console.log('comment = ');
-          // console.log(comment);
-          if (comment.length > longestComment.length) {
-            longestComment = comment;
-            // console.log('longest comment =');
-            // console.log(longestComment);
-            // console.log('comment = ');
-            // console.log(comment);
+            if (comment.length > longestComment.length) {
+              longestComment = comment;
+
+            }
           }
         }
-      }
-      // console.log('longest comment: ');
-      // console.log(longestComment);
-      // return "TEST PASS";
-    });
-    // console.log('longest comment: ');
-    // console.log(longestComment);
-    // return "TEST PASS";
+        $(parent).append('<div class="row start-hidden"><p>testing</p</div>');
+      });
+    }
   };
 
   var getRequests = function () {
