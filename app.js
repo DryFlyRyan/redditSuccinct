@@ -27,50 +27,63 @@ console.log("doc ready");
     return "test line";
   };
 
-  var $getComments = function ($relLink) {
+  var getComments = function () {
+    // console.log('get comments invoked');
     $('.succinct').each(function () {
+      // console.log('looping through .succinct');
       var relLink = $(this).attr('data');
+      // console.log(relLink);
       var parent = $(this).closest('.media');
       var longestComment = '';
+
       $.get('https://www.reddit.com/' + relLink + '.json', function (){
-        console.log("getting");
+        // console.log("getting");
       })
       .done(function (data) {
-        console.log('done');
+        // console.log('done');
+        console.log(data);
         var commentObj = data[1];
+        // console.log(commentObj);
         var thread = commentObj.data.children;
-        $(thread).each(function() {
-          var comment = [];
-          if (thread[i].data.body !== undefined) {
-            comment = thread[i].data.body;
-
-            if (comment.length > longestComment.length) {
-              longestComment = comment;
-
+        if (thread.length) {
+          // console.log('thread: ', thread);
+          console.log('body object: ', thread[0].data.body);
+          for (var i = 0; i < thread.length; i++) {
+            var target = thread[i].data.body_html;
+            // console.log(target);
+            var comment = [];
+            // console.log(thread[i].data.body);
+            if (target !== 'undefined') {
+              comment = target;
+              if (comment.length > longestComment.length) {
+                longestComment = comment;
+              }
             }
           }
-        });
-        $(parent).append('<div class="row start-hidden"><p>'+longestComment+'</p</div>');
+          console.log(longestComment);
+          $(parent).append('<div class="row start-hidden"></div>');
+          $(parent).find('.start-hidden').append(longestComment);
+        }
       });
-    )};
-  ;
+    });
   };
 
   var getRequests = function () {
 
     $.get('https://www.reddit.com/r/science.json',
-    function (data) {
+    function () {
+    console.log('getting');
+  }).done(function(data) {
       // console.log('done');
         console.log(data);
 
-      for (var i=0; i < 5; i+=1) {
+      for (var i=0; i < 20; i+=1) {
         var sublisting = data.data.children[i];
         if (sublisting.data.domain !== "self.science"){
           var $title = sublisting.data.title;
           var $thumb = sublisting.data.thumbnail;
           var $relLink = sublisting.data.permalink;
           var $formatLink = $relLink.substring(0, $relLink.length - 1);
-          $getComments($formatLink);
 
           if (sublisting.data.thumbnail === 'default') {
             $newElemNoThumb($title, $formatLink );
@@ -79,13 +92,14 @@ console.log("doc ready");
           }
         }
       }
-
+      getComments();
     });
-
   };
 
+  var get1 = getRequests();
 
-  getRequests();
+
+
 
   // $.get('python.py')
   //     .done(function (data) {
